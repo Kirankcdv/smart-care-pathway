@@ -17,10 +17,10 @@ import './App.css'
 const API_BASE = 'http://127.0.0.1:8000'
 
 const ACTION_STYLE = {
-  maintain_plan: { class: 'stable', dot: '#3C7A6B' },
-  intensify_lifestyle: { class: 'watch', dot: '#C98A3B' },
-  adjust_medication: { class: 'urgent', dot: '#B24B3C' },
-  refer_specialist: { class: 'urgent', dot: '#B24B3C' },
+  maintain_plan: { class: 'stable', dot: '#22C7A9' },
+  intensify_lifestyle: { class: 'watch', dot: '#F5A623' },
+  adjust_medication: { class: 'urgent', dot: '#F0506E' },
+  refer_specialist: { class: 'urgent', dot: '#F0506E' },
 }
 
 function App() {
@@ -36,26 +36,35 @@ function App() {
   const [recommendation, setRecommendation] = useState(null)
   const [history, setHistory] = useState([])
   const [explanation, setExplanation] = useState('')
+  const [explaining, setExplaining] = useState(false)
+
   const chartData = {
-  labels: history.map((e) => new Date(e.timestamp).toLocaleDateString()),
-  datasets: [
-    {
-      label: 'Glucose',
-      data: history.map((e) => e.vitals.glucose),
-      borderColor: '#B24B3C',
-      backgroundColor: '#B24B3C',
-      tension: 0.3,
+    labels: history.map((e) => new Date(e.timestamp).toLocaleDateString()),
+    datasets: [
+      {
+        label: 'Glucose',
+        data: history.map((e) => e.vitals.glucose),
+        borderColor: '#F0506E',
+        backgroundColor: '#F0506E',
+        tension: 0.3,
+      },
+      {
+        label: 'BMI',
+        data: history.map((e) => e.vitals.bmi),
+        borderColor: '#2DD4BF',
+        backgroundColor: '#2DD4BF',
+        tension: 0.3,
+      },
+    ],
+  }
+
+  const chartOptions = {
+    plugins: { legend: { labels: { color: '#E8EEF9' } } },
+    scales: {
+      x: { ticks: { color: '#94A3BD' }, grid: { color: 'rgba(148,163,189,0.12)' } },
+      y: { ticks: { color: '#94A3BD' }, grid: { color: 'rgba(148,163,189,0.12)' } },
     },
-    {
-      label: 'BMI',
-      data: history.map((e) => e.vitals.bmi),
-      borderColor: '#3C7A6B',
-      backgroundColor: '#3C7A6B',
-      tension: 0.3,
-    },
-  ],
-}
-const [explaining, setExplaining] = useState(false)
+  }
 
   async function createPatient() {
     setStatusMsg('Creating patient...')
@@ -86,32 +95,34 @@ const [explaining, setExplaining] = useState(false)
       console.error('Could not fetch history', err)
     }
   }
+
   async function loadExistingPatient() {
-  setStatusMsg('Loading patient...')
-  try {
-    const res = await fetch(`${API_BASE}/patients/${loadId}`)
-    if (!res.ok) throw new Error('not found')
-    const data = await res.json()
-    setPatientId(data._id)
-    setPatientName(data.name)
-    setHistory(data.vitals_history || [])
-    setStatusMsg(`Loaded patient "${data.name}"`)
-  } catch (err) {
-    setStatusMsg('Error: could not find that patient ID.')
+    setStatusMsg('Loading patient...')
+    try {
+      const res = await fetch(`${API_BASE}/patients/${loadId}`)
+      if (!res.ok) throw new Error('not found')
+      const data = await res.json()
+      setPatientId(data._id)
+      setPatientName(data.name)
+      setHistory(data.vitals_history || [])
+      setStatusMsg(`Loaded patient "${data.name}"`)
+    } catch (err) {
+      setStatusMsg('Error: could not find that patient ID.')
+    }
   }
-}
+
   async function getExplanation() {
-  setExplaining(true)
-  setExplanation('')
-  try {
-    const res = await fetch(`${API_BASE}/patients/${patientId}/explain`, { method: 'POST' })
-    const data = await res.json()
-    setExplanation(data.explanation)
-  } catch (err) {
-    setExplanation('Could not generate explanation.')
+    setExplaining(true)
+    setExplanation('')
+    try {
+      const res = await fetch(`${API_BASE}/patients/${patientId}/explain`, { method: 'POST' })
+      const data = await res.json()
+      setExplanation(data.explanation)
+    } catch (err) {
+      setExplanation('Could not generate explanation.')
+    }
+    setExplaining(false)
   }
-  setExplaining(false)
-}
 
   async function submitVitals() {
     setStatusMsg('Getting recommendation...')
@@ -147,19 +158,20 @@ const [explaining, setExplaining] = useState(false)
       <p className="eyebrow">Chronic Disease Management · Diabetes</p>
       <h1 className="title">Adaptive Care Pathway</h1>
 
-     <h2 className="section-label">Load Existing Patient</h2>
-<div className="field-row">
-  <label className="field-label">Patient ID (from Compass)</label>
-  <input
-    type="text"
-    className="field-input"
-    placeholder="Paste patient _id here"
-    value={loadId}
-    onChange={(e) => setLoadId(e.target.value)}
-  />
-</div>
-<button className="btn" onClick={loadExistingPatient}>Load Patient</button>
- <h2 className="section-label">01 · Patient</h2>
+      <h2 className="section-label">Load Existing Patient</h2>
+      <div className="field-row">
+        <label className="field-label">Patient ID (from Compass)</label>
+        <input
+          type="text"
+          className="field-input"
+          placeholder="Paste patient _id here"
+          value={loadId}
+          onChange={(e) => setLoadId(e.target.value)}
+        />
+      </div>
+      <button className="btn" onClick={loadExistingPatient}>Load Patient</button>
+
+      <h2 className="section-label">01 · Patient</h2>
       <div className="field-row">
         <label className="field-label">Name</label>
         <input
@@ -200,39 +212,40 @@ const [explaining, setExplaining] = useState(false)
           <p>Confidence {(recommendation.confidence * 100).toFixed(1)}%</p>
         </div>
       )}
-      {recommendation && (
-  <button className="btn" style={{ marginTop: 16, background: '#5B6670' }} onClick={getExplanation}>
-    {explaining ? 'Generating explanation...' : 'Explain Condition & Diet Plan'}
-  </button>
-)}
 
-{explanation && (
-  <>
-    <button
-      className="btn"
-      style={{ marginTop: 16, background: '#3C7A6B' }}
-      onClick={() => {
-        const plainText = explanation.replace(/[#*_`]/g, '')
-        const utterance = new SpeechSynthesisUtterance(plainText)
-        window.speechSynthesis.cancel()
-        window.speechSynthesis.speak(utterance)
-      }}
-    >
-      🔊 Listen to Explanation
-    </button>
-    <div className="explanation-card">
-      <ReactMarkdown>{explanation}</ReactMarkdown>
-    </div>
-  </>
-)}
+      {recommendation && (
+        <button className="btn btn-secondary" onClick={getExplanation}>
+          {explaining ? 'Generating explanation...' : 'Explain Condition & Diet Plan'}
+        </button>
+      )}
+
+      {explanation && (
+        <>
+          <button
+            className="btn btn-accent"
+            onClick={() => {
+              const plainText = explanation.replace(/[#*_`]/g, '')
+              const utterance = new SpeechSynthesisUtterance(plainText)
+              window.speechSynthesis.cancel()
+              window.speechSynthesis.speak(utterance)
+            }}
+          >
+            🔊 Listen to Explanation
+          </button>
+          <div className="explanation-card">
+            <ReactMarkdown>{explanation}</ReactMarkdown>
+          </div>
+        </>
+      )}
+
       {history.length > 0 && (
         <>
           <h2 className="section-label">03 · Pathway History</h2>
           {history.length > 1 && (
-  <div style={{ background: '#fff', border: '1px solid #D8D3C7', borderRadius: 2, padding: 16, marginBottom: 24 }}>
-    <Line data={chartData} />
-  </div>
-)}
+            <div className="chart-card">
+              <Line data={chartData} options={chartOptions} />
+            </div>
+          )}
           <div className="timeline">
             {history.slice().reverse().map((entry, i) => {
               const style = ACTION_STYLE[entry.care_action] || {}
