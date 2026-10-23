@@ -7,3 +7,4 @@ scikit-learn
 motor
 python-dotenv
 certifi
+google-generativeai
