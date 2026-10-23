@@ -14,7 +14,7 @@ import {
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend)
 import './App.css'
 
-const API_BASE = 'http://127.0.0.1:8000'
+const API_BASE = 'https://smart-care-pathway.onrender.com'
 
 const ACTION_STYLE = {
   maintain_plan: { class: 'stable', dot: '#22C7A9' },
