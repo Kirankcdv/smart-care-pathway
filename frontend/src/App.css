@@ -33,6 +33,8 @@ body {
 
 ::selection { background: var(--accent); color: #06121A; }
 
+/* ---------- Layout ---------- */
+
 .app-shell {
   max-width: 640px;
   margin: 0 auto;
@@ -68,6 +70,8 @@ body {
   margin: 44px 0 16px;
   color: var(--ink);
 }
+
+/* ---------- Form fields ---------- */
 
 .field-label {
   display: block;
@@ -107,6 +111,8 @@ body {
   gap: 14px;
 }
 
+/* ---------- Buttons ---------- */
+
 .btn {
   font-family: var(--font-mono);
   font-size: 13px;
@@ -132,6 +138,14 @@ body {
 
 .btn:active { transform: translateY(0); }
 
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  filter: none;
+}
+
 .btn-secondary {
   margin-top: 16px;
   color: var(--ink);
@@ -148,6 +162,17 @@ body {
   background: linear-gradient(135deg, #0F766E, #0D9488);
 }
 
+.btn-pdf {
+  margin-top: 20px;
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #6D5DF6, #8B5CF6);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
+}
+
+.btn-pdf:hover { box-shadow: 0 10px 26px rgba(139, 92, 246, 0.45); }
+
+/* ---------- Status message ---------- */
+
 .status-note {
   margin-top: 18px;
   padding: 12px 16px;
@@ -159,6 +184,8 @@ body {
   border-left: 3px solid var(--accent);
   border-radius: 8px;
 }
+
+/* ---------- Recommendation card ---------- */
 
 .recommendation-card {
   margin-top: 28px;
@@ -197,6 +224,87 @@ body {
   opacity: 0.92;
 }
 
+.condition-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.8;
+  margin: 0 0 2px;
+}
+
+.recommendation-card .condition-name {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 600;
+  margin: 0 0 14px;
+  opacity: 1;
+}
+
+.card-note {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--font-body);
+  line-height: 1.4;
+  opacity: 0.85;
+}
+
+/* ---------- Speech controls ---------- */
+
+.speech-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.speech-controls .btn { margin-top: 0; }
+
+.speech-status {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin: 10px 0 0;
+}
+
+/* ---------- Explanation card ---------- */
+
+.explanation-card {
+  margin-top: 18px;
+  padding: 26px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 14px;
+  color: var(--ink);
+  line-height: 1.7;
+}
+
+.explanation-card h1,
+.explanation-card h2,
+.explanation-card h3,
+.explanation-card h4 {
+  font-family: var(--font-display);
+  color: #7CF2E1;
+  margin-top: 22px;
+  margin-bottom: 8px;
+}
+
+.explanation-card h1:first-child,
+.explanation-card h2:first-child,
+.explanation-card h3:first-child { margin-top: 0; }
+
+.explanation-card p { margin: 8px 0; }
+
+.explanation-card ul,
+.explanation-card ol { padding-left: 20px; }
+
+.explanation-card li { margin-bottom: 5px; }
+
+.explanation-card strong { color: #FFFFFF; }
+
+/* ---------- Chart ---------- */
+
 .chart-card {
   background: var(--card);
   border: 1px solid var(--line);
@@ -204,6 +312,8 @@ body {
   padding: 18px;
   margin-bottom: 28px;
 }
+
+/* ---------- Timeline ---------- */
 
 .timeline {
   margin-top: 12px;
@@ -250,36 +360,11 @@ body {
   text-transform: capitalize;
 }
 
-.explanation-card {
-  margin-top: 18px;
-  padding: 26px;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-left: 3px solid var(--accent);
-  border-radius: 14px;
-  color: var(--ink);
-  line-height: 1.7;
+/* ---------- Small screens ---------- */
+
+@media (max-width: 520px) {
+  .app-shell { padding: 36px 16px 70px; }
+  .title { font-size: 34px; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .recommendation-card .condition-name { font-size: 26px; }
 }
-
-.explanation-card h1,
-.explanation-card h2,
-.explanation-card h3,
-.explanation-card h4 {
-  font-family: var(--font-display);
-  color: #7CF2E1;
-  margin-top: 22px;
-  margin-bottom: 8px;
-}
-
-.explanation-card h1:first-child,
-.explanation-card h2:first-child,
-.explanation-card h3:first-child { margin-top: 0; }
-
-.explanation-card p { margin: 8px 0; }
-
-.explanation-card ul,
-.explanation-card ol { padding-left: 20px; }
-
-.explanation-card li { margin-bottom: 5px; }
-
-.explanation-card strong { color: #FFFFFF; }
